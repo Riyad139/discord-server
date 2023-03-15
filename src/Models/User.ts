@@ -9,9 +9,9 @@ export interface IUser {
 export interface IUserDoc extends IUser, Document {}
 
 const userModel = new mongoose.Schema({
-  username: [String],
-  email: [String],
-  password: [String],
+  username: String,
+  email: String,
+  password: String,
 });
 
 const User = mongoose.model<IUserDoc>("users", userModel);
