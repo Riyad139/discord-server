@@ -40,7 +40,6 @@ export const loginUser: Controller = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const check = await User.findOne({ email });
-    console.log(check);
 
     if (!check) {
       return res.status(404).send("user not found");
@@ -60,7 +59,6 @@ export const loginUser: Controller = async (req, res, next) => {
       token,
     });
   } catch (error: any) {
-    console.log(error.message);
     res.status(501).send("Internal error");
   }
 };
