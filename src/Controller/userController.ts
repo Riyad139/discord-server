@@ -28,6 +28,11 @@ export const registerUser: Controller = async (req, res, next) => {
         expiresIn: "30d",
       }
     );
+    res.cookie("access-token", token, {
+      expires: dayjs().add(30, "day").toDate(),
+      sameSite: "lax",
+      httpOnly: true,
+    });
 
     res.status(201).json({
       email: user.email,

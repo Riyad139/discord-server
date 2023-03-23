@@ -1,4 +1,5 @@
 import * as jwt from "jsonwebtoken";
+import User from "../Models/User";
 
 const addUserToReg: Controller = async (req, res, next) => {
   try {
@@ -7,10 +8,18 @@ const addUserToReg: Controller = async (req, res, next) => {
       token as string,
       process.env.TOKEN_SECRETKEY as string
     );
-    console.log(verification);
+    //@ts-ignore
+    const id = verification.id;
+    const useRes = await User.findOne({ _id: id });
+    if (!useRes) {
+      return res.status(403).send("user is not authenticated");
+    }
+    req.user = useRes;
+    console.log(req.user);
+
     next();
   } catch (error: any) {
-    res.status(404).send("user not authenticated");
+    res.status(403).send("user is not authenticated");
   }
 };
 
