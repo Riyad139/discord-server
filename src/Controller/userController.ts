@@ -1,6 +1,7 @@
 import User from "../Models/User";
 import * as argon from "argon2";
 import * as json from "jsonwebtoken";
+import dayjs from "dayjs";
 export const registerUser: Controller = async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
@@ -29,7 +30,9 @@ export const registerUser: Controller = async (req, res, next) => {
     );
 
     res.status(201).json({
-      token,
+      email: user.email,
+      username: user.username,
+      token: token,
     });
   } catch (error: any) {
     res.status(501).send("internal error");
@@ -54,11 +57,47 @@ export const loginUser: Controller = async (req, res, next) => {
         expiresIn: "30d",
       }
     );
-
+    res.cookie("access-token", token, {
+      expires: dayjs().add(30, "day").toDate(),
+      sameSite: "lax",
+      httpOnly: true,
+    });
     res.status(200).json({
+      username: check.username,
+      email: check.email,
       token,
     });
   } catch (error: any) {
     res.status(501).send("Internal error");
+  }
+};
+
+export const logedInUser: Controller = async (req, res, next) => {
+  try {
+    const cookie = req.headers.cookie?.split("=")[1];
+    const result = json.verify(
+      cookie as string,
+      process.env.TOKEN_SECRETKEY as string
+    );
+    //@ts-ignore
+    const id = result.id;
+    const resUser = await User.findOne({ _id: id });
+    if (!resUser) throw new Error("user not found");
+
+    const token = json.sign(
+      { id: resUser._id },
+      process.env.TOKEN_SECRETKEY as string,
+      {
+        expiresIn: "30d",
+      }
+    );
+
+    res.status(200).send({
+      username: resUser?.username,
+      email: resUser?.email,
+      token,
+    });
+  } catch (error: any) {
+    res.status(404).send("User is not authorized");
   }
 };
