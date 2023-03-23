@@ -2,7 +2,7 @@ import app from "./app";
 import http from "http";
 import { Server, Socket } from "socket.io";
 import parseUser from "./store/parseUser";
-import { NextFunction } from "express";
+import userStore from "./store/store";
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
@@ -12,8 +12,10 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket: Socket) => {
-  //console.log(socket.handshake.auth.token);
-  parseUser(socket);
+  userStore.addUserToOnline(socket);
+  socket.on("disconnect", () => {
+    userStore.removeUserFromOnline(socket);
+  });
 });
 
 server.listen(process.env.PORT, () =>
