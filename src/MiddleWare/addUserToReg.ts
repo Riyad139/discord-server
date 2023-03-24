@@ -1,6 +1,5 @@
 import * as jwt from "jsonwebtoken";
 import User from "../Models/User";
-
 const addUserToReg: Controller = async (req, res, next) => {
   try {
     const token = req.headers.cookie?.split("=")[1];
@@ -15,8 +14,6 @@ const addUserToReg: Controller = async (req, res, next) => {
       return res.status(403).send("user is not authenticated");
     }
     req.user = useRes;
-    console.log(req.user);
-
     next();
   } catch (error: any) {
     res.status(403).send("user is not authenticated");

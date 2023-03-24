@@ -5,7 +5,6 @@ import dayjs from "dayjs";
 export const registerUser: Controller = async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
-
     const check = await User.findOne({ email });
 
     const hashedPassword = await argon.hash(password);
@@ -40,7 +39,7 @@ export const registerUser: Controller = async (req, res, next) => {
       token: token,
     });
   } catch (error: any) {
-    res.status(501).send("internal error");
+    res.status(501).send(error.message);
   }
 };
 
