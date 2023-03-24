@@ -10,8 +10,9 @@ dotenv.config();
 const app = express();
 app.use(cors({ origin: process.env.HOST, credentials: true }));
 app.use(express.json());
-app.use(addUserToReg);
 app.use(authRoute);
+
+app.use(addUserToReg);
 app.use(friendRoute);
 
 mongoose.connect(process.env.DB_URL as string).then(() => {

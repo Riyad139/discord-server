@@ -2,7 +2,7 @@ import app from "./app";
 import http from "http";
 import { Server, Socket } from "socket.io";
 import parseUser from "./store/parseUser";
-import userStore from "./store/store";
+import userStore, { setIoInstance } from "./store/store";
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
@@ -10,6 +10,8 @@ const io = new Server(server, {
     methods: ["GET", "POST"],
   },
 });
+
+setIoInstance(io);
 
 io.on("connection", (socket: Socket) => {
   userStore.addUserToOnline(socket);

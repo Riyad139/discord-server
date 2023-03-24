@@ -1,5 +1,7 @@
 import Invitation from "../Models/Invitation";
 import User from "../Models/User";
+import updatePendingUser from "../Routes/update/friendPendinghandler";
+import { getSocketInstance } from "../store/store";
 
 export const addFriend: Controller = async (req, res, next) => {
   try {
@@ -42,8 +44,11 @@ export const addFriend: Controller = async (req, res, next) => {
       Receiver: targetUser._id,
     });
 
+    await updatePendingUser(targetUser._id.toString());
+
     res.status(201).send(resPonse);
   } catch (error: any) {
-    res.status(500).send("hmmmm");
+    console.log(error.message);
+    res.status(500).send(error.message);
   }
 };
