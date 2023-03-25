@@ -5,7 +5,7 @@ export interface IUser {
   username?: string;
   email?: string;
   password?: string;
-  friends: { userId: string; ref: string }[];
+  friends: string[];
 }
 
 export interface IUserDoc extends IUser, Document {}
@@ -14,7 +14,7 @@ const userModel = new mongoose.Schema({
   username: String,
   email: String,
   password: String,
-  friends: [{ type: String, ref: "Users" }],
+  friends: [String],
 });
 
 const User = mongoose.model<IUserDoc>("Users", userModel);

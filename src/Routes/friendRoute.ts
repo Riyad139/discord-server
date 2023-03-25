@@ -1,7 +1,13 @@
 import express from "express";
-import { addFriend } from "../Controller/firendController";
-const route = express.Router();
+import {
+  acceptFriendRequest,
+  addFriend,
+  rejectFriendRequest,
+} from "../Controller/firendController";
+const router = express.Router();
 
-route.route("/friend/addFriend").post(addFriend);
+router.route("/friend/addFriend").post(addFriend);
+router.route("/friend/reject").post(rejectFriendRequest);
+router.route("/friend/accept").post(acceptFriendRequest);
 
-export default route;
+export default router;
