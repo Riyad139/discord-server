@@ -52,3 +52,49 @@ export const addFriend: Controller = async (req, res, next) => {
     res.status(500).send(error.message);
   }
 };
+
+export const rejectFriendRequest: Controller = async (req, res, next) => {
+  try {
+    const { requestId } = req.body;
+    const check = await Invitation.exists({ _id: requestId });
+    if (!check) {
+      return res.status(403).send("Invitation is not found");
+    }
+    await Invitation.findByIdAndDelete(requestId);
+
+    await updatePendingUser(req.user._id);
+    res.status(200).send("success");
+  } catch (error: any) {
+    res.status(500).send("error occured");
+  }
+};
+
+export const acceptFriendRequest: Controller = async (req, res, next) => {
+  try {
+    const { requestId } = req.body;
+    const check = await Invitation.exists({ _id: requestId });
+    if (!check) {
+      return res.status(403).send("Invitation is not found");
+    }
+    const invite = await Invitation.findByIdAndDelete(requestId);
+
+    const senderId = invite?.Sender;
+    const reciverId = invite?.Receiver;
+
+    const senderUser = await User.findById(senderId);
+    const reciverUser = await User.findById(reciverId);
+
+    senderUser?.friends.push(reciverId as string);
+    reciverUser?.friends.push(senderId as string);
+
+    await senderUser?.save();
+    await reciverUser?.save();
+
+    await updatePendingUser(senderId as string);
+    await updatePendingUser(reciverId as string);
+
+    res.send("ok");
+  } catch (error: any) {
+    res.status(500).send("try again later!");
+  }
+};
