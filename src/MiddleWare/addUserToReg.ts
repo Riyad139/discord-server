@@ -1,5 +1,6 @@
 import * as jwt from "jsonwebtoken";
 import User from "../Models/User";
+import updateFriendList from "../Routes/update/updateFriendList";
 const addUserToReg: Controller = async (req, res, next) => {
   try {
     const token = req.headers.cookie?.split("=")[1];

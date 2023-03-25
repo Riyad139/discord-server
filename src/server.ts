@@ -3,6 +3,7 @@ import http from "http";
 import { Server, Socket } from "socket.io";
 import parseUser from "./store/parseUser";
 import userStore, { setIoInstance } from "./store/store";
+import updateFriendList from "./Routes/update/updateFriendList";
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {

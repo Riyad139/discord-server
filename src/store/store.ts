@@ -2,9 +2,10 @@ import { Server, Socket } from "socket.io";
 import * as jwt from "jsonwebtoken";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import updatePendingUser from "../Routes/update/friendPendinghandler";
+import updateFriendList from "../Routes/update/updateFriendList";
 class CuserStore {
   private onlineUser = new Map();
-  private _parseUserId(token: string) {
+  _parseUserId(token: string) {
     const id = jwt.verify(token, process.env.TOKEN_SECRETKEY as string);
     //@ts-ignore
     return id.id;
@@ -13,6 +14,7 @@ class CuserStore {
     const id = this._parseUserId(socket.handshake.auth.token);
     this.onlineUser.set(socket.id, id);
     updatePendingUser(id).then((vl) => {});
+    updateFriendList(id).then((vl) => {});
   }
   removeUserFromOnline(socket: Socket) {
     this.onlineUser.delete(socket.id);

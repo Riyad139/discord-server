@@ -14,7 +14,7 @@ const userModel = new mongoose.Schema({
   username: String,
   email: String,
   password: String,
-  friends: [String],
+  friends: [{ type: String, ref: "Users" }],
 });
 
 const User = mongoose.model<IUserDoc>("Users", userModel);

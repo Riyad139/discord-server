@@ -8,7 +8,6 @@ const updatePendingUser = async (userId: string) => {
   const pendingInvitation = await Invitation.find({
     Receiver: targetUser._id,
   }).populate("Sender", "_id username email");
-  //if (pendingInvitation.length < 1) return "error";
 
   const getUserConnectedIds = userStore.getSocketListByUserId(
     targetUser._id.toString()

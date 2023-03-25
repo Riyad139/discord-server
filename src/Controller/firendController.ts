@@ -1,7 +1,7 @@
 import Invitation from "../Models/Invitation";
 import User from "../Models/User";
 import updatePendingUser from "../Routes/update/friendPendinghandler";
-import { getSocketInstance } from "../store/store";
+import updateFriendList from "../Routes/update/updateFriendList";
 
 export const addFriend: Controller = async (req, res, next) => {
   try {
@@ -92,8 +92,13 @@ export const acceptFriendRequest: Controller = async (req, res, next) => {
 
     await updatePendingUser(senderId as string);
     await updatePendingUser(reciverId as string);
+    
+    console.log(senderId, reciverId);
+    
+    await updateFriendList(senderId as string);
+    await updateFriendList(reciverId as string);
 
-    res.send("ok");
+    res.send("success");
   } catch (error: any) {
     res.status(500).send("try again later!");
   }
