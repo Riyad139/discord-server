@@ -1,13 +1,7 @@
 import mongoose, { Document, Schema } from "mongoose";
 export interface IInvitation {
-  Sender?: {
-    userId?: Schema.Types.ObjectId;
-    ref?: any;
-  };
-  Receiver?: {
-    userId?: Schema.Types.ObjectId;
-    ref?: any;
-  };
+  Sender?: string;
+  Receiver?: string;
 }
 
 export interface IInvitationDoc extends IInvitation, Document {}
