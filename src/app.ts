@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import authRoute from "./Routes/authRoute";
 import friendRoute from "./Routes/friendRoute";
+import chatRoute from "./Routes/chat";
 import cors from "cors";
 import addUserToReg from "./MiddleWare/addUserToReg";
 dotenv.config();
@@ -14,6 +15,7 @@ app.use(authRoute);
 
 app.use(addUserToReg);
 app.use(friendRoute);
+app.use(chatRoute);
 
 mongoose.connect(process.env.DB_URL as string).then(() => {
   console.log("database is connected");
