@@ -27,7 +27,6 @@ export const DirectConversation: Controller = async (req, res, next) => {
         conversation: [message._id],
       });
     }
-    console.log(1);
 
     await updateMessages(check?._id.toString(), null);
 
