@@ -37,6 +37,13 @@ class CuserStore {
     });
     return online;
   }
+  getUserIdBySockId(socketIds: string[] | null | undefined) {
+    const set = new Set();
+    socketIds?.map((id) => {
+      if (this.onlineUser.has(id)) set.add(this.onlineUser.get(id));
+    });
+    return Array.from(set);
+  }
 }
 let io: any;
 
