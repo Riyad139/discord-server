@@ -1,14 +1,13 @@
 import app from "./app";
 import http from "http";
 import { Server, Socket } from "socket.io";
-import parseUser from "./store/parseUser";
 import userStore, { setIoInstance } from "./store/store";
-import updateFriendList from "./Routes/update/updateFriendList";
 import updateOnlineUserList from "./Routes/update/udpdateOnlineUser";
 import createRoom from "./Routes/room/createRoom";
 import updateRoom from "./Routes/update/updateRoom";
 import addUserToSocket from "./MiddleWare/addUserToSocket";
 import joinRoomHandler from "./Routes/room/joinRoom";
+import removeFromRoom from "./Routes/room/removeFromRoom";
 
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -34,6 +33,7 @@ io.on("connection", (socket: Socket) => {
   /////// on  disconnect event remove user from the  online list ///////
   socket.on("disconnect", () => {
     userStore.removeUserFromOnline(socket);
+    removeFromRoom(socket);
   });
   /////////////////////////////// on  create room event ///////////////
   socket.on("create-room", (payload) => {
@@ -47,6 +47,8 @@ io.on("connection", (socket: Socket) => {
   socket.on("join-room", (payload) => {
     joinRoomHandler(payload, socket);
   });
+  ////// leaving room ////////////////////////////
+  socket.on("leave-room", () => removeFromRoom(socket));
 
   ///////////////// update online list after every 30 seconds
   setInterval(() => emitOnlineUser(socket), 30 * 1000);
