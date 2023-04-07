@@ -20,7 +20,6 @@ const updateActiveRoom = async (room: IRoomDoc | null) => {
   const res = await userDetails(ids);
 
   room?.joinedSocketId.map((socId) => {
-    console.log(room);
     io.to(socId).emit("active-room", { activeUser: res });
   });
 };
