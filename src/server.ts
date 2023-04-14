@@ -8,6 +8,8 @@ import updateRoom from "./Routes/update/updateRoom";
 import addUserToSocket from "./MiddleWare/addUserToSocket";
 import joinRoomHandler from "./Routes/room/joinRoom";
 import removeFromRoom from "./Routes/room/removeFromRoom";
+import InitialPeerConnectionHandler from "./Routes/room/InitialPeerConnectionHandler";
+import peerSignalHandler from "./Routes/room/peerSignalHandler";
 
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -27,11 +29,15 @@ export const emitOnlineUser = (socket: Socket) => {
 };
 
 io.on("connection", (socket: Socket) => {
+  let InterValid: NodeJS.Timer | null = null;
   /////////////////////////// on connect add user to online and update online list
   userStore.addUserToOnline(socket);
   emitOnlineUser(socket);
   /////// on  disconnect event remove user from the  online list ///////
   socket.on("disconnect", () => {
+    if (InterValid) {
+      clearInterval(InterValid);
+    }
     userStore.removeUserFromOnline(socket);
     removeFromRoom(socket);
   });
@@ -49,9 +55,14 @@ io.on("connection", (socket: Socket) => {
   });
   ////// leaving room ////////////////////////////
   socket.on("leave-room", () => removeFromRoom(socket));
-
+  ///// conn-init ///////////////////////////////
+  socket.on("conn-init", (data) => InitialPeerConnectionHandler(socket, data));
+  /////// conn-signal /////////////////////////
+  socket.on("conn-signal", (data) => {
+    peerSignalHandler(data, socket);
+  });
   ///////////////// update online list after every 30 seconds
-  setInterval(() => emitOnlineUser(socket), 30 * 1000);
+  InterValid = setInterval(() => emitOnlineUser(socket), 30 * 1000);
 });
 
 server.listen(process.env.PORT, () =>
