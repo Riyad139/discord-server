@@ -14,7 +14,7 @@ import peerSignalHandler from "./Routes/room/peerSignalHandler";
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: process.env.SOCKET_CORS as string,
     methods: ["GET", "POST"],
   },
 });
