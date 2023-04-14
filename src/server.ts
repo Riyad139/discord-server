@@ -15,7 +15,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: process.env.SOCKET_CORS as string,
-    allowedHeaders: ["access-control-Allow-origin"],
+    allowedHeaders: ["Access-Control-Allow-Origin"],
     methods: ["GET", "POST"],
   },
 });
