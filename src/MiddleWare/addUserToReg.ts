@@ -2,6 +2,8 @@ import * as jwt from "jsonwebtoken";
 import User from "../Models/User";
 import updateFriendList from "../Routes/update/updateFriendList";
 const addUserToReg: Controller = async (req, res, next) => {
+  console.log(req.path);
+  if (req.path === "/user/signup" || req.path === "/user/login") return next();
   try {
     const token = req.headers.cookie?.split("=")[1];
     const verification = jwt.verify(
