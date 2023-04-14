@@ -10,11 +10,12 @@ import joinRoomHandler from "./Routes/room/joinRoom";
 import removeFromRoom from "./Routes/room/removeFromRoom";
 import InitialPeerConnectionHandler from "./Routes/room/InitialPeerConnectionHandler";
 import peerSignalHandler from "./Routes/room/peerSignalHandler";
-
+import cors from "cors";
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: process.env.SOCKET_CORS as string,
+    allowedHeaders: ["access-control-Allow-origin"],
     methods: ["GET", "POST"],
   },
 });
