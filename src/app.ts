@@ -11,11 +11,11 @@ dotenv.config();
 const app = express();
 app.use(cors({ origin: process.env.HOST, credentials: true }));
 app.use(express.json());
-app.use(authRoute);
+app.use("/api", authRoute);
 
-app.use(addUserToReg);
-app.use(friendRoute);
-app.use(chatRoute);
+app.use("/api", addUserToReg);
+app.use("/api", friendRoute);
+app.use("/api", chatRoute);
 
 mongoose.connect(process.env.DB_URL as string).then(() => {
   console.log("database is connected");
